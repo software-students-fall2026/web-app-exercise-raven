@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Class Overview</h1>
+
+    <p>Total Students: {{ total_students }}</p>
+
+    {% if average_grade is not none %}
+        <p>Class Average: {{ "%.2f"|format(average_grade) }}%</p>
+        <p>Highest Grade: {{ highest_grade }}%</p>
+        <p>Lowest Grade: {{ lowest_grade }}%</p>
+    {% else %}
+        <p>No grades available yet.</p>
+    {% endif %}
+
+{% endblock %}
