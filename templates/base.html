@@ -6,10 +6,10 @@
 </head>
 <body>
     <nav>
-        <a href="/">Home</a>
-        <a href="/students">Students</a>
-        <a href="/class-grades">Class Grades</a>
-        <a href="/class-overview">Class Overview</a>
+        <a href = "{{ url_for('home') }}">Home</a>
+        <a href = "{{ url_for('students') }}">Students</a>
+        <a href = "{{ url_for('class_grades') }}">Class Grades</a>
+        <a href = "{{ url_for('class_overview') }}">Class Overview</a>
     </nav>
 
     <hr>
