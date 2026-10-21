@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from pymongo import MongoClient
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 load_dotenv()
@@ -13,6 +13,30 @@ db = client[os.getenv("MONGO_DBNAME")]
 def home():
     return render_template("index.html")
 
+@app.route("/students/add", methods = ["GET", "POST"])
+def add_student():
+    students = list(db.students.find())
+    
+    if request.method == "GET":
+        return render_template("_new_student_form.html", students=students)
+
+    firstName = request.form["ffirstname"]
+    prefName = request.form["fprefname"]
+    lastName = request.form["flastname"]
+
+    if prefName == "":
+        prefName = firstName
+    
+    student = {
+        "first_name": firstName,
+        "preferrred_name": prefName,
+        "last_name": lastName,
+    }
+
+    db.students.insert_one(student)
+
+    return redirect(url_for("students"))
+    
 @app.route("/students")
 def students():
     students = list(db.students.find())

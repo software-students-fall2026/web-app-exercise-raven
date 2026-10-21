@@ -4,5 +4,21 @@
 
     <h1>Students</h1>
 
+    <a href = "{{ url_for('add_student') }}">Add Student</a>
+    
+    {% block subcontent %}
+    {% endblock %}
+
+    <table border="1">
+        <tr>
+            <th>Name</th>
+        </tr>
+
+        {% for student in students %}
+        <tr>
+            <td>{{ student.first_name }} {{ student.last_name }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 
 {% endblock %}
