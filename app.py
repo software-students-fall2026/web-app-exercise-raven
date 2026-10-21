@@ -13,6 +13,12 @@ db = client[os.getenv("MONGO_DBNAME")]
 def home():
     return render_template("index.html")
 
+@app.route("/students")
+def students():
+    students = list(db.students.find())
+
+    return render_template("students.html", students=students)
+
 @app.route("/class-grades")
 def class_grades():
     students = list(db.students.find())
