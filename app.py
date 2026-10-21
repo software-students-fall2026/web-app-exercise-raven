@@ -13,6 +13,12 @@ db = client[os.getenv("MONGO_DBNAME")]
 def home():
     return render_template("index.html")
 
+@app.route("/students")
+def students():
+    students = list(db.students.find())
+
+    return render_template("students.html", students=students)
+
 @app.route("/class-grades")
 def class_grades():
     students = list(db.students.find())
@@ -50,5 +56,6 @@ def class_overview():
         lowest_grade=lowest_grade
     )
 
+# host = '0.0.0.0' added for mobile running
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    app.run(host='0.0.0.0', debug=True, port=5001)
