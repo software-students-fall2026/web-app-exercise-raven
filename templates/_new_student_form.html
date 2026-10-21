@@ -1,0 +1,19 @@
+<!-- Adding a New Student-->
+{% extends "students.html" %}
+
+{% block subcontent %}
+
+<h2>Add a Student</h2>
+
+<form method = "POST" action = "{{ url_for('add_student') }}">
+  <input type = "text" id = "ffirstname" name = "ffirstname" placeholder = "First Name"/>
+  <br />
+  <input type = "text" id = "fprefname" name = "fprefname" placeholder = "Preferred Name"/>
+  <br />
+  <input type = "text" id = "flastname" name = "flastname" placeholder = "Last Name"/>
+  <br />
+  <input type="submit" value = "Add Student" />
+</form>
+
+
+{% endblock %}
