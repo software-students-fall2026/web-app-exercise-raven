@@ -37,6 +37,12 @@ def add_student():
 
     return redirect(url_for("students"))
     
+@app.route("/students")
+def students():
+    students = list(db.students.find())
+
+    return render_template("students.html", students=students)
+
 @app.route("/class-grades")
 def class_grades():
     students = list(db.students.find())
