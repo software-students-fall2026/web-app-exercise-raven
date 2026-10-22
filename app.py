@@ -67,6 +67,16 @@ def edit_student(student_id):
 
     return redirect(url_for("students"))
 
+@app.route("/students/delete/<student_id>", methods = ["POST"])
+def delete_student(student_id):
+    try:
+        student_id = ObjectId(student_id)
+    except Exception:
+        return "Invalid student ID.", 400
+
+    db.students.delete_one({"_id": student_id})
+    return redirect(url_for("students"))
+
 @app.route("/students")
 def students():
     students = list(db.students.find())
