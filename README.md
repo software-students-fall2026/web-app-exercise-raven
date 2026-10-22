@@ -16,4 +16,5 @@ See instructions. Delete this line and place instructions to download, configure
 
 ## Task boards
  
-[Sprint 1](https://github.com/orgs/software-students-fall2026/projects/45) 
+- [Sprint 1](https://github.com/orgs/software-students-fall2026/projects/45) 
+- [Sprint 2](https://github.com/orgs/software-students-fall2026/projects/67) 
