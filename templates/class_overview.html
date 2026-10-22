@@ -3,14 +3,45 @@
 {% block content %}
     <h1>Class Overview</h1>
 
-    <p>Total Students: {{ total_students }}</p>
+    <p>View your class's overall academic performance.</p>
 
-    {% if average_grade is not none %}
-        <p>Class Average: {{ "%.2f"|format(average_grade) }}%</p>
-        <p>Highest Grade: {{ highest_grade }}%</p>
-        <p>Lowest Grade: {{ lowest_grade }}%</p>
-    {% else %}
-        <p>No grades available yet.</p>
-    {% endif %}
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h2>Total Students</h2>
+            <p class="stat-value">{{ total_students }}</p>
+        </div>
 
+        <div class="stat-card">
+            <h2>Class Average</h2>
+            <p class="stat-value">
+                {% if average_grade is not none %}
+                    {{ "%.2f"|format(average_grade) }}%
+                {% else %}
+                    N/A
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="stat-card">
+            <h2>Highest Grade</h2>
+            <p class="stat-value">
+                {% if highest_grade is not none %}
+                    {{ highest_grade }}%
+                {% else %}
+                    N/A
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="stat-card">
+            <h2>Lowest Grade</h2>
+            <p class="stat-value">
+                {% if lowest_grade is not none %}
+                    {{ lowest_grade }}%
+                {% else %}
+                    N/A
+                {% endif %}
+            </p>
+        </div>
+    </div>
 {% endblock %}

@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from pymongo import MongoClient
 from flask import Flask, render_template, request, redirect, url_for
+from bson.objectid import ObjectId
 
 app = Flask(__name__)
 load_dotenv()
@@ -48,6 +49,73 @@ def class_grades():
     students = list(db.students.find())
 
     return render_template("class_grades.html", students=students)
+
+@app.route("/class-grades/add", methods=["GET", "POST"])
+def add_grade():
+    if request.method == "GET":
+        students = list(db.students.find())
+        return render_template("add_grade.html", students=students)
+
+    student_id = request.form["student_id"]
+    grade = request.form["grade"]
+
+    try:
+        grade = float(grade)
+        if grade < 0 or grade > 100:
+            return "Grade must be between 0 and 100.", 400
+
+        db.students.update_one(
+            {"_id": ObjectId(student_id)},
+            {"$set": {"grade": grade}}
+        )
+    except (ValueError, TypeError):
+        return "Invalid grade or student ID.", 400
+
+    return redirect(url_for("class_grades"))
+
+@app.route("/class-grades/edit/<student_id>", methods=["GET", "POST"])
+def edit_grade(student_id):
+    try:
+        student_id = ObjectId(student_id)
+    except Exception:
+        return "Invalid student ID.", 400
+
+    student = db.students.find_one({"_id": student_id})
+
+    if student is None:
+        return "Student not found.", 404
+
+    if request.method == "GET":
+        return render_template("edit_grade.html", student=student)
+
+    try:
+        grade = float(request.form["grade"])
+
+        if not 0 <= grade <= 100:
+            return "Grade must be between 0 and 100.", 400
+    except (ValueError, KeyError):
+        return "Invalid grade.", 400
+
+    db.students.update_one(
+        {"_id": student_id},
+        {"$set": {"grade": grade}}
+    )
+
+    return redirect(url_for("class_grades"))
+
+@app.route("/class-grades/delete/<student_id>", methods=["POST"])
+def delete_grade(student_id):
+    try:
+        student_id = ObjectId(student_id)
+    except Exception:
+        return "Invalid student ID.", 400
+
+    db.students.update_one(
+        {"_id": student_id},
+        {"$unset": {"grade": ""}}
+    )
+
+    return redirect(url_for("class_grades"))
 
 
 @app.route("/class-overview")
