@@ -24,20 +24,49 @@ def add_student():
     firstName = request.form["ffirstname"]
     prefName = request.form["fprefname"]
     lastName = request.form["flastname"]
-
-    if prefName == "":
-        prefName = firstName
     
     student = {
         "first_name": firstName,
-        "preferrred_name": prefName,
+        "preferred_name": prefName,
         "last_name": lastName,
     }
 
     db.students.insert_one(student)
 
     return redirect(url_for("students"))
-    
+
+@app.route("/students/edit/<student_id>", methods = ["GET", "POST"])
+def edit_student(student_id):
+    try:
+        student_id = ObjectId(student_id)
+    except Exception:
+        return "Invalid student ID.", 400
+
+    student = db.students.find_one({"_id": student_id})
+
+    if student is None:
+        return "Student not found.", 404
+
+    if request.method == "GET":
+        return render_template("edit_student.html", student = student)
+
+    firstName = request.form["ffirstname"]
+    prefName = request.form["fprefname"]
+    lastName = request.form["flastname"]
+
+    db.students.update_one(
+        {"_id": student_id},
+        {
+            "$set": {
+            "first_name": firstName,
+            "preferred_name": prefName,
+            "last_name": lastName,
+            }
+        },
+    )
+
+    return redirect(url_for("students"))
+
 @app.route("/students")
 def students():
     students = list(db.students.find())
