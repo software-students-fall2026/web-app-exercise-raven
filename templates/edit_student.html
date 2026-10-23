@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Edit Student</h1>
+
+    <p>Student: {{ student.first_name }} {{ student.last_name }}</p>
+
+    <form method = "POST" action = "{{ url_for('edit_student', student_id = student._id) }}" class = "grade-form">
+
+        <div class="form-group">
+            <label for = "first_name">First Name:</label>
+            <input type = "text" id = "ffirstname" name = "ffirstname" value = "{{  student.first_name  }}"/>
+            <label for = "pref_name">Preferred Name:</label>
+            <input type = "text" id = "fprefname" name = "fprefname" value = "{{  student.preferred_name  }}"/>
+            <label for = "last_name">Last Name:</label>
+            <input type = "text" id = "flastname" name = "flastname" value = "{{  student.last_name  }}"/>
+            <br />
+        </div>
+
+        <div class = "form-actions">
+            <button type = "submit">Save Changes</button>
+            <a href = "{{ url_for('students') }}">Cancel</a>
+        </div>
+    </form>
+{% endblock %}
