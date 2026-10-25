@@ -70,13 +70,15 @@ a {
     color: #2856a5;
 }
 
-button, input[type="submit"] {
+button, .add_buttons {
     background-color: #2856a5;
     color: white;
     border: none;
     border-radius: 5px;
     padding: 10px 16px;
     cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
 }
 
 button:hover, input[type="submit"]:hover {

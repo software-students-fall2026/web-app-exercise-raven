@@ -79,7 +79,8 @@ def delete_student(student_id):
 
 @app.route("/students")
 def students():
-    students = list(db.students.find())
+    students = list(db.students.find().sort("first_name"))
+    docs = db.messages.find({}).sort("created_at", -1)
 
     return render_template("students.html", students=students)
 

@@ -1,22 +1,26 @@
 <!-- Adding a New Student-->
-{% extends "students.html" %}
+{% extends "base.html" %}
 
-{% block subcontent %}
+{% block content %}
 
 <h2>Add a Student</h2>
 
-<form method = "POST" action = "{{ url_for('add_student') }}">
-    <input type = "text" id = "ffirstname" name = "ffirstname" placeholder = "First Name"/>
-    <br />
-    <input type = "text" id = "fprefname" name = "fprefname" placeholder = "Preferred Name"/>
-    <br />
-    <input type = "text" id = "flastname" name = "flastname" placeholder = "Last Name"/>
-    <br />
-    <input type="submit" value = "Add Student" />
-</form>
+<form method = "POST" action = "{{ url_for('add_student') }}" class = "grade-form">
 
-<div class="form-actions">
-    <a href="{{ url_for('students') }}"> Cancel </a>
-</div>
+        <div class="form-group">
+            <label for = "first_name">First Name:</label>
+            <input type = "text" id = "ffirstname" name = "ffirstname" placeholder = "First Name" required/>
+            <label for = "pref_name">Preferred Name:</label>
+            <input type = "text" id = "fprefname" name = "fprefname" placeholder = "Preferred Name"/>
+            <label for = "last_name">Last Name:</label>
+            <input type = "text" id = "flastname" name = "flastname" placeholder = "Last Name" required/>
+            <br />
+        </div>
+
+        <div class = "form-actions">
+            <button type = "submit">Add Student</button>
+            <a href = "{{ url_for('students') }}">Cancel</a>
+        </div>
+    </form>
 
 {% endblock %}
