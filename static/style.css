@@ -14,8 +14,9 @@ nav {
     background-color: #263b67;
     padding: 18px 30px;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 24px;
+    flex-direction: row;
 }
 
 nav a {
@@ -70,7 +71,7 @@ a {
     color: #2856a5;
 }
 
-button, .add_buttons {
+button, .add-buttons {
     background-color: #2856a5;
     color: white;
     border: none;
@@ -225,4 +226,29 @@ input, select {
 
 .form-actions button {
     font-size: 15px;
+}
+
+.search-bar {
+    width: 100%;
+    display: flex;
+    gap: 8px; 
+}
+
+.search-bar input {
+    flex-grow: 1;       
+    min-width: 0;
+    font-size: 16px;
+    margin-bottom: 0px;
+    padding: 12px;
+}
+
+.search-bar a {
+    background-color: gray;
+    color: white;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    flex-shrink: 0;  
+    padding: 10px 15px;
+    margin-top: 8px;
 }
