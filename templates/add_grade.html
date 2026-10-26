@@ -9,10 +9,35 @@
             <select name="student_id" id="student_id" required>
                 {% for student in students %}
                     <option value="{{ student._id }}">
-                        {{ student.first_name }} {{ student.last_name }}
+                        {% if student.preferred_name %}
+                            {{ student.preferred_name }} {{ student.last_name }}
+                        {% else %}
+                            {{ student.first_name }} {{ student.last_name }}
+                        {% endif %}
                     </option>
                 {% endfor %}
             </select>
+        </div>
+
+        <input type = "radio" id = "create" name = "assign-method" value = "on" checked>
+        <label for = "create">New Assignment</label>
+        <input type = "radio" id = "existing" name = "assign-method" value = "off">
+        <label for = "existing">Existing Assignment</label>
+
+        <div class="form-group toggle-content">
+            <label for = "assignment_id">Assignment:</label>
+            <select name = "assignment_id" id = "assignment_id">
+                {% for assignment in assignments %}
+                    <option value = "{{ assignment._id }}">
+                        {{ assignment.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group toggle-content2">
+            <label for = "assignment_name">New Assignment Name:</label>
+            <input type = "text" name = "assignment_name" id = "assignment_name">
         </div>
 
         <div class="form-group">

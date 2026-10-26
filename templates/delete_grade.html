@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Delete Grade</h1>
+
+    <p>{{ student.first_name }} 
+    {% if student.preferred_name %} 
+    "{{ student.preferred_name }}" 
+    {% endif %} 
+    {{ student.last_name }}
+    </p>
+
+    <form method="POST" class="grade-form">
+        <input type = "radio" id = "create" name = "delete-method" value = "on" checked>
+        <label for = "individual">Delete Assignment Grade</label>
+        <input type = "radio" id = "existing" name = "delete-method" value = "off">
+        <label for = "entire">Delete Entire Grade</label>
+
+        <div class="form-group toggle-delete">
+            <label for = "assignment_id">Assignment:</label>
+            <select name = "assignment_id" id = "assignment_id">
+                {% for assignment in student.assignment_grades %}
+                    <option value = "{{ assignment.assignment_id }}">
+                        {{ assignment.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class = "delete-button">Delete</button>
+            <a href="{{ url_for('class_grades') }}">Cancel</a>
+        </div>
+    </form>
+
+{% endblock %}

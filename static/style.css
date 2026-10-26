@@ -252,3 +252,15 @@ input, select {
     padding: 10px 15px;
     margin-top: 8px;
 }
+
+#create:checked ~ .toggle-content {
+    display: none;
+}
+
+#existing:checked ~ .toggle-content2 {
+    display: none;
+}
+
+#entire:checked ~ .toggle-delete {
+    display: none
+}
