@@ -16,13 +16,18 @@
 
         {% for student in students %}
         <tr>
-            <td>{{ student.first_name }} {{ student.last_name }}</td>
+            <td>{{ student.first_name }} 
+                {% if student.preferred_name %}
+                "{{ student.preferred_name }}"
+                {% endif %}
+                {{ student.last_name }}
+            </td>
 
             <td>
                 {% if student.grade is defined %}
                     {{ student.grade }}%
                 {% else %}
-                    Not graded
+                    N/A
                 {% endif %}
             </td>
 

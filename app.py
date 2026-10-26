@@ -83,11 +83,11 @@ def students():
     if request.method == "GET":
         return render_template("students.html", students = students)
     
-    query = request.form["searchquery"]
+    query = request.form["searchquery"].strip()
     results = []
     for student in students:
         firstName = student.get("first_name").lower()
-        prefName = student.get("preferred_name").lower()
+        prefName = (student.get("preferred_name")).lower()
         lastName = student.get("last_name").lower()
 
         if query.lower() in firstName or query.lower() in lastName or query.lower()in prefName:
@@ -103,13 +103,18 @@ def class_grades():
 
 @app.route("/class-grades/add", methods=["GET", "POST"])
 def add_grade():
+    students = list(db.students.find())
+    assignments = list(db.assignments.find())
+
     if request.method == "GET":
-        students = list(db.students.find())
-        return render_template("add_grade.html", students=students)
+        return render_template("add_grade.html", students=students, assignments = assignments)
 
-    student_id = request.form["student_id"]
+    student_id = ObjectId(request.form["student_id"])
+    assignment_id = ObjectId(request.form["assignment_id"])
+    assignment_name = request.form["assignment_name"]
     grade = request.form["grade"]
-
+    create = request.form.get("assign-method")
+            
     try:
         grade = float(grade)
         if grade < 0 or grade > 100:
@@ -122,6 +127,34 @@ def add_grade():
     except (ValueError, TypeError):
         return "Invalid grade or student ID.", 400
 
+    if create == "on":
+        if not assignment_name:
+            return redirect(url_for("class_grades"))
+        assignment = {
+            "assignment_name": assignment_name,
+            "student_grades": [{"student_id": student_id, "grade": grade}]
+        }
+        assignment_id = db.assignments.insert_one(assignment).inserted_id
+    else:
+        assignment = db.assignments.find_one({"_id": assignment_id})
+        db.assignments.update_one(
+            {"_id": assignment_id},
+            {"$push": {"student_grades": {"student_id": student_id, "grade": grade}}}
+        )
+
+    db.students.update_one(
+        {"_id": student_id},
+        {"$push": {"assignment_grades": {"assignment_id": assignment_id, "grade": grade}}}
+    )
+
+    student = db.students.find_one({"_id": student_id})
+    all_grades = [g["grade"] for g in student["assignment_grades"]]
+    avg = sum(all_grades) / len(all_grades)
+    db.students.update_one(
+        {"_id": student_id},
+        {"$set": {"grade": round(avg, 1)}}
+    )
+        
     return redirect(url_for("class_grades"))
 
 @app.route("/class-grades/edit/<student_id>", methods=["GET", "POST"])
