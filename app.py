@@ -77,12 +77,23 @@ def delete_student(student_id):
     db.students.delete_one({"_id": student_id})
     return redirect(url_for("students"))
 
-@app.route("/students")
+@app.route("/students", methods = ["POST", "GET"])
 def students():
     students = list(db.students.find().sort("first_name"))
-    docs = db.messages.find({}).sort("created_at", -1)
+    if request.method == "GET":
+        return render_template("students.html", students = students)
+    
+    query = request.form["searchquery"]
+    results = []
+    for student in students:
+        firstName = student.get("first_name").lower()
+        prefName = student.get("preferred_name").lower()
+        lastName = student.get("last_name").lower()
 
-    return render_template("students.html", students=students)
+        if query.lower() in firstName or query.lower() in lastName or query.lower()in prefName:
+            results.append(student)
+
+    return render_template("students.html", students = results, query = query)
 
 @app.route("/class-grades")
 def class_grades():

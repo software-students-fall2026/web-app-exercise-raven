@@ -5,8 +5,19 @@
     <h1>Students</h1>
 
     <p>
-        <a href = "{{ url_for('add_student') }}" class = "add_buttons">Add Student</a>
+        <a href = "{{ url_for('add_student') }}" class = "add-buttons">Add Student</a>
     </p>
+
+    <form method = "POST" action = "{{ url_for('students') }}" class = "search-bar">
+        {% if query %}
+            <input name = "searchquery" type = "text" value = "{{ query }}" id = "search-bar">
+            <a class = "clear-button" href = "{{ url_for('students') }}">X</a>
+        {% else %}
+            <input name = "searchquery" type = "text" placeholder = "Search.." id = "search-bar">
+        {% endif %}
+    </form>
+
+    
 
     <table border="1">
         <tr>
