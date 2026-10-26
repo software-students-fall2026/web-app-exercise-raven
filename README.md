@@ -10,9 +10,26 @@ We aim to create a web app that allows teachers to keep track of their students 
  
 [User Story Issues](https://github.com/software-students-fall2026/web-app-exercise-raven/issues?q=is%3Aissue+state%3Aopen) 
 
-## Steps necessary to run the software
+## Steps to run software
 
-See instructions. Delete this line and place instructions to download, configure, and run the software here.
+1. Clone repository and move into the folder:
+    ```
+    git clone https://github.com/software-students-fall2026/web-app-exercise-raven.git
+    cd web-app-exercise-raven
+    ```
+2. For every clone, run course setup script:
+    - Mac/Linux: `python3 .automations/setup.py`
+    - Windows: `python .automations/setup.py` 
+3. Install dependencies: `pip install -r requirements.txt`
+4. Copy example into your own `.env` file:
+    - Mac/Linux/Git Bash: `cp env.example .env`
+    - Windows (cmd): `copy env.example .env`
+
+### Running the app
+
+1. Run `python app.py` (`python3` on Mac if `python` is not aliased)
+2. Open `http://localhost:5001` in browser
+3. Press `Ctrl + C` in the terminal to stop running the app
 
 ## Task boards
  
