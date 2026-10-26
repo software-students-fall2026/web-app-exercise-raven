@@ -137,10 +137,10 @@ def add_grade():
                     {"$push": {"student_grades": {"student_id": student_id, "grade": grade}}}
                 )
 
-                db.students.update_one(
-                    {"_id": student_id},
-                    {"$push": {"assignment_grades": {"assignment_id": assignment_id, "name": assignment.get("name"), "grade": grade}}}
-                )
+        db.students.update_one(
+            {"_id": student_id},
+            {"$push": {"assignment_grades": {"assignment_id": assignment_id, "name": assignment.get("name"), "grade": grade}}}
+        )
     except (ValueError, TypeError):
         return "Invalid grade or student ID.", 400
 
