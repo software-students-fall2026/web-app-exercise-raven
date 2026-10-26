@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from pymongo import MongoClient
 from flask import Flask, render_template, request, redirect, url_for
 from bson.objectid import ObjectId
+import statistics
 
 app = Flask(__name__)
 load_dotenv()
@@ -94,13 +95,6 @@ def students():
             results.append(student)
 
     return render_template("students.html", students = results, query = query)
-
-@app.route("/class-grades")
-def class_grades():
-    students = list(db.students.find().sort("first_name"))
-    #db.assignments.delete_many({})
-    #db.students.delete_many({})
-    return render_template("class_grades.html", students=students)
 
 @app.route("/class-grades/add", methods=["GET", "POST"])
 def add_grade():
@@ -279,7 +273,20 @@ def delete_grade(student_id):
         )
     
     return redirect(url_for("class_grades"))
+def letter_grade(grade):
+    if grade is None: return "-"
+    if grade >= 90: return "A"
+    if grade >= 80: return "B"
+    if grade >= 70: return "C"
+    if grade >= 60: return "D"
+    return "F"
 
+@app.route("/class-grades")
+def class_grades():
+    students = list(db.students.find().sort("grade", -1))
+    for s in students:
+        s["letter"] = letter_grade(s.get("grade"))
+    return render_template("class_grades.html", students=students)
 
 @app.route("/class-overview")
 def class_overview():
@@ -296,19 +303,25 @@ def class_overview():
 
     if grades:
         average_grade = sum(grades) / len(grades)
+        median_grade = statistics.median(grades)  
         highest_grade = max(grades)
         lowest_grade = min(grades)
+        pass_rate = (sum(g >= 60 for g in grades) / len(grades) * 100)
     else:
         average_grade = None
+        median_grade = None
         highest_grade = None
         lowest_grade = None
+        pass_rate = None
 
     return render_template(
         "class_overview.html",
         total_students=total_students,
         average_grade=average_grade,
+        median_grade=median_grade,
         highest_grade=highest_grade,
-        lowest_grade=lowest_grade
+        lowest_grade=lowest_grade,
+        pass_rate=pass_rate
     )
 
 # host = '0.0.0.0' added for mobile running

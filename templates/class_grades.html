@@ -25,7 +25,7 @@
 
             <td>
                 {% if student.grade is defined %}
-                    {{ student.grade }}%
+                    {{ student.grade }} {{ student.letter }}
                 {% else %}
                     N/A
                 {% endif %}

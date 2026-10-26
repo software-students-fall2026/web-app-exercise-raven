@@ -10,6 +10,29 @@
             <h2>Total Students</h2>
             <p class="stat-value">{{ total_students }}</p>
         </div>
+        <div class="stat-card">
+            <h2>Median Grade</h2>
+            <p class="stat-value">
+                {% if median_grade is not none %}
+                    {{ "%.2f"|format(median_grade) }}%
+                {% else %}
+                    N/A
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="stat-card">
+            <h2>Pass Rate</h2>
+            <p class="stat-value">
+                {% if pass_rate is not none %}
+                    {{ "%.1f"|format(pass_rate) }}%
+                {% else %}
+                    N/A
+                {% endif %}
+            </p>
+        </div>
+
+        
 
         <div class="stat-card">
             <h2>Class Average</h2>
