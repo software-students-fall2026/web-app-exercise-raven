@@ -26,10 +26,10 @@
 
         <div class="form-group toggle-content">
             <label for = "assignment_id">Assignment:</label>
-            <select name = "assignment_id" id = "assignment_id" required>
+            <select name = "assignment_id" id = "assignment_id">
                 {% for assignment in assignments %}
                     <option value = "{{ assignment._id }}">
-                        {{ assignment.assignment_name }}
+                        {{ assignment.name }}
                     </option>
                 {% endfor %}
             </select>
