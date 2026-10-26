@@ -215,11 +215,20 @@ def delete_grade(student_id):
     except Exception:
         return "Invalid student ID.", 400
 
+    db.assignments.update_many(
+        {"student_grades.student_id": student_id},
+        {"$pull": {"student_grades": {"student_id": student_id}}}
+    )
+    
     db.students.update_one(
         {"_id": student_id},
-        {"$unset": {"grade": ""}}
+        {"$unset": {
+                    "grade": "",
+                    "assignment_grades": ""
+                }
+        }
     )
-
+    
     return redirect(url_for("class_grades"))
 
 
