@@ -260,3 +260,7 @@ input, select {
 #existing:checked ~ .toggle-content2 {
     display: none;
 }
+
+#entire:checked ~ .toggle-delete {
+    display: none
+}

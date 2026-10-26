@@ -134,15 +134,19 @@ def add_grade():
         else:
             assignment_id = ObjectId(request.form["assignment_id"])
             assignment = db.assignments.find_one({"_id": assignment_id})
-            db.assignments.update_one(
-                {"_id": assignment_id},
-                {"$push": {"student_grades": {"student_id": student_id, "grade": grade}}}
-            )
+            student = db.students.find_one({"_id": student_id})
+            if db.students.find_one({"_id": student_id, "assignment_grades.assignment_id": assignment_id}):
+                edit_grade(student_id)
+            else:  
+                db.assignments.update_one(
+                    {"_id": assignment_id},
+                    {"$push": {"student_grades": {"student_id": student_id, "grade": grade}}}
+                )
 
-        db.students.update_one(
-            {"_id": student_id},
-            {"$push": {"assignment_grades": {"assignment_id": assignment_id, "name": assignment.get("name"), "grade": grade}}}
-        )
+                db.students.update_one(
+                    {"_id": student_id},
+                    {"$push": {"assignment_grades": {"assignment_id": assignment_id, "name": assignment.get("name"), "grade": grade}}}
+                )
     except (ValueError, TypeError):
         return "Invalid grade or student ID.", 400
 
@@ -208,26 +212,71 @@ def edit_grade(student_id):
 
     return redirect(url_for("class_grades"))
 
-@app.route("/class-grades/delete/<student_id>", methods=["POST"])
+@app.route("/class-grades/delete/<student_id>", methods=["POST", "GET"])
 def delete_grade(student_id):
     try:
         student_id = ObjectId(student_id)
     except Exception:
-        return "Invalid student ID.", 400
+        return "Invalid student or assignment ID.", 400
 
-    db.assignments.update_many(
-        {"student_grades.student_id": student_id},
-        {"$pull": {"student_grades": {"student_id": student_id}}}
-    )
-    
-    db.students.update_one(
-        {"_id": student_id},
-        {"$unset": {
-                    "grade": "",
-                    "assignment_grades": ""
+    if request.method == "GET":
+        return render_template("delete_grade.html", student = db.students.find_one({"_id": student_id}))
+
+    indiv = request.form.get("delete-method")
+    if indiv == "on":
+        assignment_id = ObjectId(request.form["assignment_id"])
+        assignment = db.assignments.find_one({"_id": assignment_id})
+        db.students.update_one(
+            {"_id": student_id},
+            {
+                "$pull": {
+                    "assignment_grades": {
+                        "assignment_id": assignment_id
+                    }
                 }
-        }
-    )
+            }
+        )
+
+        student = db.students.find_one({"_id": student_id})
+        all_grades = [g["grade"] for g in student["assignment_grades"]]
+        if len(all_grades) == 0:
+            db.students.update_one(
+            {"_id": student_id},
+            {"$unset": {
+                        "grade": "",
+                        "assignment_grades": ""
+                    }
+            }
+        )
+        else:
+            avg = sum(all_grades) / len(all_grades)
+            db.students.update_one(
+                {"_id": student_id},
+                {"$set": {"grade": round(avg, 1)}}
+            )
+
+        db.assignments.update_one(
+            {
+                "_id": assignment_id,
+                "student_grades.student_id": student_id
+            },
+            {"$pull": {"student_grades": {"student_id": student_id}}}
+        )
+
+    else:
+        db.assignments.update_many(
+            {"student_grades.student_id": student_id},
+            {"$pull": {"student_grades": {"student_id": student_id}}}
+        )
+
+        db.students.update_one(
+            {"_id": student_id},
+            {"$unset": {
+                        "grade": "",
+                        "assignment_grades": ""
+                    }
+            }
+        )
     
     return redirect(url_for("class_grades"))
 
